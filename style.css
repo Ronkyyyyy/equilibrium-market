@@ -1,0 +1,425 @@
+/* --- 基本設定と世界観 --- */
+body {
+    font-family: 'Times New Roman', Times, serif; /* 重厚なセリフ体 */
+    background-color: #1a1a1a; /* 暗い背景 */
+    color: #cccccc; /* やや暗い白 */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#game-container {
+    width: 90%;
+    max-width: 1000px;
+    border: 1px solid #444;
+    background-color: #2a2a2a; /* 背景より少し明るい黒 */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); /* 深い影 */
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+h1, h2, h3 {
+    font-weight: bold;
+    color: #ffffff;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+/* --- ヘッダー（タイトルとスコア） --- */
+#game-header {
+    padding: 15px 20px;
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #444;
+}
+
+#game-title {
+    margin: 0;
+    font-size: 2em;
+    color: #e0e0e0;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+#round-tracker {
+    font-size: 1.2em;
+    margin-top: 5px;
+}
+
+#vp-tracker {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    font-size: 1.1em;
+}
+
+/* --- メインボード --- */
+#main-board {
+    padding: 20px;
+}
+
+/* 市場エリア */
+#market-area {
+    margin-bottom: 20px;
+}
+#market-cards {
+    display: flex;
+    gap: 10px;
+    min-height: 100px;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* 資源カード（赤・青） */
+.card {
+    width: 60px;
+    height: 90px;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    font-size: 1.5em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #fff;
+}
+.card.red {
+    background-color: #8b0000; /* 暗い赤 */
+    color: #ffdddd;
+    border-color: #ffdddd;
+}
+.card.blue {
+    background-color: #00008b; /* 暗い青 */
+    color: #ddddff;
+    border-color: #ddddff;
+}
+.card.back { /* CPUのチップや山札用 */
+    background-color: #4a4a4a;
+    color: #999;
+    border-color: #777;
+    font-size: 1em;
+    writing-mode: vertical-rl;
+}
+
+/* プレイヤーエリア */
+#players-area {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+.player-board {
+    width: 32%;
+    background-color: #333;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #444;
+}
+.player-board h3 {
+    margin-top: 0;
+}
+/* プレイヤー（あなた）を強調 */
+#player-you {
+    border: 2px solid #b8860b; /* 金（ゴールド）の枠 */
+    box-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 40px;
+    margin-top: 10px;
+}
+
+/* 優先権チップ */
+.chip-button, .chip-display {
+    padding: 8px 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px; /* チップ感を出す */
+    cursor: pointer;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    transition: background-color 0.2s;
+}
+.chip-button.gold { background-color: #b8860b; color: #fff; }
+.chip-button.silver { background-color: #a0a0a0; color: #000; }
+.chip-button.bronze { background-color: #8c5a2c; color: #fff; }
+
+.chip-button:disabled {
+    background-color: #555;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.cards-held {
+    margin-top: 15px;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: space-around;
+    background: #2a2a2a;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+/* --- フッター（ログ） --- */
+#game-footer {
+    padding: 15px 20px;
+    background-color: #1f1f1f;
+    border-top: 1px solid #444;
+}
+#game-log {
+    height: 100px;
+    overflow-y: auto;
+    background-color: #111;
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+#game-log p {
+    margin: 0 0 5px;
+    border-bottom: 1px dotted #333;
+    padding-bottom: 3px;
+}
+
+/* --- モーダル（セットアップ画面） --- */
+#setup-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* 暗いオーバーレイ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+.modal-content {
+    background-color: #2a2a2a;
+    padding: 30px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+}
+.cpu-setup {
+    margin: 15px 0;
+    font-size: 1.1em;
+}
+select, button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1em;
+    padding: 8px 12px;
+    background-color: #444;
+    color: #eee;
+    border: 1px solid #666;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #555;
+}
+#start-game-button {
+    margin-top: 20px;
+    background-color: #b8860b; /* 開始ボタンはゴールド */
+    color: #000;
+    font-weight: bold;
+}
+
+/* --- ここから追記分 --- */
+
+/* プレイされたチップと残りチップの区別 */
+.chip-display {
+    padding: 8px 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    opacity: 0.4; /* デフォルトは薄く (残りチップ) */
+    background-color: #555;
+    color: #ccc;
+}
+.chip-display.gold { background-color: #b8860b; color: #fff; }
+.chip-display.silver { background-color: #a0a0a0; color: #000; }
+.chip-display.bronze { background-color: #8c5a2c; color: #fff; }
+
+/* プレイヤーがカード選択待ちの時のスタイル */
+.card.selected {
+    transform: scale(0.9);
+    opacity: 0.5;
+    border: 3px solid #ff0000;
+}
+
+/* ログの強調 */
+#game-log b {
+    color: #b8860b; /* ゴールド */
+    font-weight: bold;
+}
+
+/* --- サドンデス用モーダル (修正版) --- */
+#sudden-death-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9); /* 通常より濃いオーバーレイ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.sd-modal {
+    width: 60%; 
+    max-width: 700px; 
+    border: 2px solid #b8860b; /* ゴールドの枠 */
+    text-align: left;
+}
+
+.sd-modal h2 {
+    color: #b8860b;
+    text-align: center;
+}
+
+/* sd-status (ログ) は削除 */
+
+#sd-setup-info, #sd-match-result {
+    background: #1f1f1f;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    margin: 15px 0;
+    text-align: center; /* ステータス表示は中央揃え */
+}
+
+#sd-role-selection, #sd-hand-selection {
+    text-align: center; /* 選択ボタンは中央揃え */
+}
+
+#sd-role-selection button, #sd-hand-selection button {
+    margin: 5px;
+}
+
+/* サドンデス対戦中の手札 */
+#sd-player-hand {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1.1em;
+}
+.sd-card-button {
+    width: 80px;
+    height: 110px;
+    font-size: 1.5em;
+    font-weight: bold;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+.sd-card-button.red { background-color: #8b0000; color: #ffdddd; }
+.sd-card-button.blue { background-color: #00008b; color: #ddddff; }
+.sd-card-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* --- (ここから新レイアウト) --- */
+.sd-battle-board {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start; /* 上揃え */
+    margin: 20px 0;
+}
+.sd-player-zone {
+    width: 40%;
+    padding: 10px;
+    border: 1px solid #666;
+    border-radius: 5px;
+    background: #333;
+}
+#sd-you-zone {
+    border: 2px solid #b8860b; /* あなたを強調 */
+}
+.sd-player-zone h4 {
+    margin: 0 0 5px 0;
+    text-align: center;
+    color: #fff;
+}
+.sd-player-role {
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: center;
+    color: #b8860b; /* 役割を強調 */
+    margin-bottom: 5px;
+}
+.sd-player-score {
+    font-size: 1em;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.sd-vs {
+    font-size: 2em;
+    font-weight: bold;
+    color: #b8860b;
+    padding-top: 80px; /* 位置調整 */
+}
+
+/* (改修) 手札情報表示 */
+.sd-player-hand-display { 
+    text-align: center;
+    font-size: 0.9em; 
+    background: #2a2a2a;
+    padding: 5px;
+    border-radius: 3px;
+    margin-top: 5px;
+}
+.sd-player-hand-display div {
+    margin: 2px 0;
+}
+.sd-info-card { /* 旧 .sd-opponent-card */
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin: 0 2px;
+    border: 1px solid #555;
+    background: #333;
+    min-width: 40px;
+    color: #ccc; /* デフォルト色 */
+}
+.sd-info-card.red { color: #ffdddd; }
+.sd-info-card.blue { color: #ddddff; }
+
+
+.sd-played-card {
+    width: 60px;
+    height: 90px;
+    margin: 10px auto 0;
+    border: 2px dashed #888;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    font-weight: bold;
+    background: #222;
+}
+.sd-played-card.red {
+    background-color: #8b0000; color: #ffdddd; border-style: solid; border-color: #ffdddd;
+}
+.sd-played-card.blue {
+    background-color: #00008b; color: #ddddff; border-style: solid; border-color: #ddddff;
+}
